@@ -35,12 +35,23 @@ def get_upcoming_birthdays(users):
     congratulation_list = list()
     today = datetime.today().date()
     seven_days = timedelta(days=7)
+    
 
     for user in users:
         user_birthday = datetime.strptime(user["birthday"], "%Y.%m.%d").date()
         if not is_date_passed(user_birthday, today):
             if (is_date_passed(user_birthday, today + seven_days)):
-                print(user["name"], user_birthday, "userBday+7days", user_birthday + seven_days)
+                user_birthday_weekday = datetime(month=user_birthday.month, day=user_birthday.day, year=today.year).weekday()
+                if user_birthday_weekday > 5:
+                    days_to_monday = timedelta(days=7 - user_birthday_weekday)
+                    user_congratulation_date = datetime(month=user_birthday.month, day=user_birthday.day, year=today.year) + days_to_monday
+                else:
+                    user_congratulation_date = datetime(month=user_birthday.month, day=user_birthday.day, year=today.year)
+
+                if (is_date_passed(user_congratulation_date, today + seven_days)):
+                    congratulation_list.append(dict({'name': user["name"], 'congratulation_date': user_congratulation_date.date().strftime("%Y.%m.%d")}))
+
+    return congratulation_list
 
 
   
@@ -53,9 +64,8 @@ if __name__ == "__main__":
     {"name": "Jonh Connor", "birthday": "1990.03.02"},
     {"name": "Sarah Connor", "birthday": "1970.05.18"}
     ]
-    get_upcoming_birthdays(users)
+    print(get_upcoming_birthdays(users))
     today = datetime.today().date()
-    seven_days = timedelta(days=7)
 
     assert is_date_passed(datetime(year=2019, month=1, day=7).date(), today) == True
     assert is_date_passed(datetime(year=2029, month=12, day=31).date(), today) == False
