@@ -35,3 +35,4 @@ if __name__ == "__main__":
 
     sanitized_numbers = [normalize_phone(num) for num in raw_numbers]
     print("Нормалізовані номери телефонів для SMS-розсилки:", sanitized_numbers)
+    assert sanitized_numbers == ['+380671234567', '+380952345678', '+380441234567', '+380501234567', '+380501233234', '+380503451234', '+380508889900', '+380501112222', '+380501112211']
