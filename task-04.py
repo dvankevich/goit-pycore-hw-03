@@ -1,15 +1,5 @@
 from datetime import datetime, timedelta
-def is_date_passed(date):
-    '''
-    Check if the given date has already passed, ignoring the year.
-    Args:
-        date (datetime.date): A date object representing the date to check.
-    Returns:
-        bool: 
-            - True if the date has already passed (i.e., the month and day are earlier than today).
-            - False if the date is today or will occur in the future.
-    '''
-    today = datetime.today().date()
+def is_date_passed(date, today):
     if (today.month > date.month) or (today.month == date.month and today.day > date.day):
         return True # The date has already been
     return False # The date is today or will be in the future.
@@ -48,9 +38,10 @@ def get_upcoming_birthdays(users):
 
     for user in users:
         user_birthday = datetime.strptime(user["birthday"], "%Y.%m.%d").date()
-        if not is_date_passed(user_birthday):
-            print(user["name"], user_birthday, "userBday+7days", user_birthday + seven_days)
-            print(is_date_passed(user_birthday + seven_days))
+        if not is_date_passed(user_birthday, today):
+            if (is_date_passed(user_birthday, today + seven_days)):
+                print(user["name"], user_birthday, "userBday+7days", user_birthday + seven_days)
+
 
   
 
@@ -63,8 +54,10 @@ if __name__ == "__main__":
     {"name": "Sarah Connor", "birthday": "1970.05.18"}
     ]
     get_upcoming_birthdays(users)
+    today = datetime.today().date()
     seven_days = timedelta(days=7)
-    
-    assert is_date_passed(datetime(year=2019, month=1, day=7)) == True
-    assert is_date_passed(datetime(year=2029, month=12, day=31)) == False
+
+    assert is_date_passed(datetime(year=2019, month=1, day=7).date(), today) == True
+    assert is_date_passed(datetime(year=2029, month=12, day=31).date(), today) == False
+
 
